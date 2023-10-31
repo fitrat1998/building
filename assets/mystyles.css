@@ -1,0 +1,29 @@
+.mybtn{
+	margin: auto 0px;
+	width:100px;
+	font-size: 20px;
+
+}
+
+#card {
+	display: none ;
+	width: 100%;
+	background-color: #F8F8F8 !important;
+}
+
+.card {
+	display: none ;
+	width: 100%;
+	background-color:  !important;
+}
+
+.flexCheckDefault {
+	accent-color: #b30000 !important;
+}
+
+.comment{
+	display: none ;
+	width: 100%;
+	background-color: #F8F8F8 !important;
+}
+
