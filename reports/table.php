@@ -7,10 +7,10 @@ $ide = $_POST["ide"];
 // echo $ide;
 
 $start_date = strtotime($_POST["start"]);
-// echo $ide;
+// echo $start_date;
 
 $finish_date = strtotime($_POST["finish"]);
-// echo $ide;
+// echo $finish_date;
 
 $section_name_list = [];
 
@@ -27,17 +27,26 @@ while ($row = mysqli_fetch_assoc($sql2)) {
         $row['section_name'],
     ]);
 }
+
 $temp_arr2 = [];
 
-if(($start_date) && empty($finish_date)) {
-    $sql3 = mysqli_query($link, "SELECT * FROM extra_object WHERE object_name = '$ide'");
-}elseif($start_date && $finish_date) {
-    $sql3 = mysqli_query($link, "SELECT * FROM extra_object WHERE created_date BETWEEN $start_date and $finish_date AND  object_name = '$ide'");
+if(empty($start_date) && empty($finish_date)) {
+    $sql3 = mysqli_query($link, "SELECT * FROM `extra_object` WHERE object_name = '$ide'");
+}
+elseif(empty($start_date) && !empty($finish_date)) {
+    $sql3 = mysqli_query($link, "SELECT * FROM `extra_object` WHERE created_date BETWEEN '$start_date' AND '$finish_date';");
+}
+elseif(!empty($start_date) && empty($finish_date)) {
+    $sql3 = mysqli_query($link, "SELECT * FROM `extra_object` WHERE created_date <= '$finish_date'");
+}
+else{
+    // $sql3 = mysqli_query($link, "SELECT * FROM `extra_object` WHERE created_date >= '$start_date' AND created_date <= '$finish_date'");
+
+    $sql3 = mysqli_query($link, "SELECT * FROM `extra_object` WHERE created_date BETWEEN'$start_date' AND created_date '$finish_date'");
 }
 
 while ($row3 = mysqli_fetch_assoc($sql3)) {
     array_push($temp_arr2, $row3);
-    // array_push($row3['surface']);
 }
 
 foreach ($temp_arr2 as $key => $value) {
@@ -54,8 +63,3 @@ foreach ($temp_arr2 as $key => $value) {
 // RETURN DATA TABLE VALUES FOR REPORT
 echo json_encode($return_values);
 
-
-// SELECT  *
-// FROM    Product_sales 
-// WHERE   From_date >= '2013-01-03' AND
-//         To_date   <= '2013-01-09'

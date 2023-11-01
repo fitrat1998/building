@@ -272,7 +272,7 @@ if ($_SESSION['user']) {
                               <tbody>
                                  <tr>
                                     <td>Minimum date:</td>
-                                    <td><input type="date" class="start" name="min" onchange="startDate(this.value)"></td>
+                                    <td><input type="date" class="start" name="min"></td>
                                  </tr>
                                  <tr>
                                     <td>Maximum date:</td>
@@ -344,10 +344,13 @@ if ($_SESSION['user']) {
          <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
          <script type="text/javascript">
+
           $(document).ready(function () {
                $(".start").change(function () {
                     let start = $('.start').val();
-                   
+                     const selectObject = document.querySelector('#object');
+
+               const table = new DataTable('#example');
                     $.ajax({
                        url: "table.php",
                        type: "POST",
@@ -355,7 +358,20 @@ if ($_SESSION['user']) {
                           start:start
                        },
                        success:function(data){
-                           console.log(data)
+                           const returnData = jQuery.parseJSON(data)
+                           console.log(returnData)
+                           // table.row.add(["<button>Add</button>"])
+                           const trArr = [];
+
+                           returnData.forEach(item => {
+
+                              const row = item.map(innerItem => [`${innerItem}`])
+                              trArr.push(row)
+                           })
+                          
+                           console.log(trArr)
+
+                           table.rows.add(trArr).draw();
                        },
                        error:function(xhr){
                          alert("Connecting error!!!");
@@ -368,8 +384,10 @@ if ($_SESSION['user']) {
         <script type="text/javascript">
            $(document).ready(function () {
                $(".finish").change(function () {
+                     const selectObject = document.querySelector('#object');
 
-                    let finish = $('.finish').val();
+                     const table = new DataTable('#example');
+                     let finish = $('.finish').val();
 
                     $.ajax({
                        url: "table.php",
@@ -378,7 +396,20 @@ if ($_SESSION['user']) {
                           finish:finish
                        },
                        success:function(data){
-                           console.log(data)
+                           const returnData = jQuery.parseJSON(data)
+                           console.log(returnData)
+                           // table.row.add(["<button>Add</button>"])
+                           const trArr = [];
+
+                           returnData.forEach(item => {
+
+                              const row = item.map(innerItem => [`${innerItem}`])
+                              trArr.push(row)
+                           })
+                          
+                           console.log(trArr)
+
+                           table.rows.add(trArr).draw();
                        },
                        error:function(xhr){
                          alert("Connecting error!!!");
