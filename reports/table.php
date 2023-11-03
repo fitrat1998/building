@@ -3,18 +3,15 @@ session_start();
 include "../config.php";
 include '../date.php';
 
-$ide = $_POST["ide"];
+$ide = $_POST["object_name"];
 // echo $ide;
 
-$start_date = strtotime($_POST["start"]);
-// echo $start_date;
+$start_date = $_POST["start"];
 
-$finish_date = strtotime($_POST["finish"]);
-// echo $finish_date;
+$finish_date = $_POST["finish"];
 
 $section_name_list = [];
 
-// RETURN VALUES FOR REPORT DATA TABLE
 $return_values = [];
 
 $sql2 = mysqli_query($link, "SELECT * FROM sections WHERE parent = 'flat'");
@@ -30,24 +27,38 @@ while ($row = mysqli_fetch_assoc($sql2)) {
 
 $temp_arr2 = [];
 
-if(empty($start_date) && empty($finish_date)) {
-    $sql3 = mysqli_query($link, "SELECT * FROM `extra_object` WHERE object_name = '$ide'");
-}
-elseif(empty($start_date) && !empty($finish_date)) {
-    $sql3 = mysqli_query($link, "SELECT * FROM `extra_object` WHERE created_date BETWEEN '$start_date' AND '$finish_date';");
-}
-elseif(!empty($start_date) && empty($finish_date)) {
-    $sql3 = mysqli_query($link, "SELECT * FROM `extra_object` WHERE created_date <= '$finish_date'");
-}
-else{
-    // $sql3 = mysqli_query($link, "SELECT * FROM `extra_object` WHERE created_date >= '$start_date' AND created_date <= '$finish_date'");
+$start_time = isset($_POST['start']) ? $_POST['start'] : null;
+$end_time = isset($_POST['finish']) ? $_POST['finish'] : null;
 
-    $sql3 = mysqli_query($link, "SELECT * FROM `extra_object` WHERE created_date BETWEEN'$start_date' AND created_date '$finish_date'");
+// Tugallanish vaqt berilmagan bolsa, barcha malumotlarni olish
+if (empty($end_time) && empty($start_time)) {
+    $query = "SELECT * FROM `extra_object` WHERE object_name='$ide' AND flat > 0";
+} else {
+    if (!empty($end_time) && empty($start_time)) {
+        $query = "SELECT * FROM `extra_object` WHERE object_name='$ide' AND flat > 0 AND created_date <='$end_time'";
+    }
+
+    elseif (empty($end_time) && !empty($start_time)) {
+        $query = "SELECT * FROM `extra_object` WHERE object_name='$ide' AND flat > 0 AND created_date >='$start_time'";
+    }
+    
+    elseif(!empty($end_time) && !empty($start_time)){
+        $query = "SELECT * FROM `extra_object` WHERE object_name='$ide' AND flat > 0 AND created_date BETWEEN '$start_time' AND '$end_time'";
+    }
 }
 
-while ($row3 = mysqli_fetch_assoc($sql3)) {
-    array_push($temp_arr2, $row3);
+$result = mysqli_query($link,$query);
+
+if (mysqli_num_rows($result) > 0) {
+    // Malumotlarni olish
+    while ($row = mysqli_fetch_assoc($result)) {
+        array_push($temp_arr2, $row);
+    }
+} else {
+    echo "Hech qanday natija topilmadi";
 }
+
+
 
 foreach ($temp_arr2 as $key => $value) {
     $row = explode(",", $value['surface']);
@@ -60,6 +71,5 @@ foreach ($temp_arr2 as $key => $value) {
     array_push($return_values, $row);
 }
 
-// RETURN DATA TABLE VALUES FOR REPORT
 echo json_encode($return_values);
 

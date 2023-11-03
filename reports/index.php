@@ -229,14 +229,26 @@ if ($_SESSION['user']) {
             <div class="container-fluid">
                <div class="row">
                   <div class="col-lg-12">
+                     <form class="form-control" method="POST" id="sort">
                      <div class="card">
                         <div class="card-body">
                            <div class="row mb-3">
                               <!--  -->
+                              <div class="col-lg-4" id="test">
+                                 <i class=" fas fa-calendar "></i>
+                                 <label> Start from</label>
+                                 <input type="date" name="start" class="start form-control" >
+                              </div>
+
+                               <div class="col-lg-4" id="test">
+                                 <i class=" fas fa-calendar "></i>
+                                 <label> Start from</label>
+                                 <input type="date" name="finish" class="finish form-control" >
+                              </div>
 
                               <div class="col-lg-4" id="test">
                                  <i class=" fas fa-hospital "></i>
-                                 <label> Objects</label>
+                                 <label> Untill to</label>
                                  <select name="object_name" class="form-control object" placeholder="Address" required id="object">
                                     <option>Choose object</option>
                                     <?php
@@ -257,6 +269,7 @@ if ($_SESSION['user']) {
 
 
                               </div>
+                             </form>
                            </div>
                         </div>
                      </div>
@@ -268,18 +281,7 @@ if ($_SESSION['user']) {
                         <h5 class="card-title">Reports</h5>
 
                         <div class="table-responsive" id="">
-                           <table border="0" cellspacing="5" cellpadding="5">
-                              <tbody>
-                                 <tr>
-                                    <td>Minimum date:</td>
-                                    <td><input type="date" class="start" name="min"></td>
-                                 </tr>
-                                 <tr>
-                                    <td>Maximum date:</td>
-                                    <td><input type="date" name="min" class="finish" ></td>
-                                 </tr>
-                              </tbody>
-                           </table>
+                           
                            <table id="example" class="display nowrap table" style="width:100%">
                               <thead>
                                  <tr>
@@ -343,12 +345,12 @@ if ($_SESSION['user']) {
          <script src="../assets/libs/quill/dist/quill.min.js"></script>
          <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-         <script type="text/javascript">
+       <!--   <script type="text/javascript">
 
           $(document).ready(function () {
                $(".start").change(function () {
                     let start = $('.start').val();
-                     const selectObject = document.querySelector('#object');
+                     // const selectObject = document.querySelector('#object');
 
                const table = new DataTable('#example');
                     $.ajax({
@@ -384,7 +386,7 @@ if ($_SESSION['user']) {
         <script type="text/javascript">
            $(document).ready(function () {
                $(".finish").change(function () {
-                     const selectObject = document.querySelector('#object');
+                     // const selectObject = document.querySelector('#object');
 
                      const table = new DataTable('#example');
                      let finish = $('.finish').val();
@@ -417,7 +419,7 @@ if ($_SESSION['user']) {
                     });
                });
            });
-         </script>
+         </script> -->
 
          <script type="text/javascript">
             function myFunction() {
@@ -603,20 +605,22 @@ if ($_SESSION['user']) {
 
 
 
-               selectObject.addEventListener('change', getData)
+               selectObject.addEventListener('change', getData);
 
                async function getData() {
                   let ide = $('#object').val();
-                  // console.log(ide)
+                  let alldata = $('#sort').serialize();  
+
+                  console.log(alldata)
 
 
                   $.ajax({
                      url: "table.php",
                      type: "POST",
-                     data: {
-                        ide: ide,
-                     },
+                     data: alldata,
                      success: function(data) {
+                        table.clear()
+                           .draw();
                         const returnData = jQuery.parseJSON(data)
                         console.log(returnData)
                         // table.row.add(["<button>Add</button>"])

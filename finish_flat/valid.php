@@ -34,11 +34,11 @@
  	 }
 
 	 if($_SESSION['globaldate']){
-	 	$time = strtotime($_SESSION['globaldate']);
+	 	$time = $_SESSION['globaldate'];
 	 }
 
 	 else {
-		$time = time();
+		$time = date('Y-m-d');
 	 }
 
 	 $comment = trim($_POST['comment']);
