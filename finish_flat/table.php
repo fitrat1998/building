@@ -2,8 +2,11 @@
     include '../config.php';
 
     $num = $_POST['num'];
+    $object_name  = $_POST['object_name'];
+    print_r($_POST);
+    exit;
 
-    $sql = mysqli_query($link,"SELECT * FROM extra_object WHERE flat = '$num'");
+    $sql = mysqli_query($link,"SELECT * FROM extra_object WHERE flat = '$num' AND object_name = '$object_name'");
     $res = mysqli_fetch_assoc($sql);
 
     $temp_surface = explode(",",$res['surface']);
@@ -96,6 +99,8 @@
             $(document).ready(function() {
                 $(".js-example-basic-multiple").select2();
                 $(".js-example-basic-multiple").css("background-color","gray");
+
+                table.rows.add(trArr).draw();
             });
         </script>
         <?

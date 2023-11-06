@@ -1,4 +1,4 @@
-<?php 
+   <?php 
    session_start();
    include '../config.php';
    include '../date.php';
@@ -543,12 +543,16 @@
        function change(){
             
             let room_id = $('#room').val();
+            let obj= $('.object_name').val();
+
+            console.log(obj)
          
              $.ajax({
                  url: "table.php",
                  type: "POST",
                  data:{
                      num:room_id,
+                     obj:obj,
                  },
                  success:function(data) {
                     $('#generated').html(data);
